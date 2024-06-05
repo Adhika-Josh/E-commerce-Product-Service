@@ -7,7 +7,7 @@ import (
 )
 
 func TestConnectDB(t *testing.T) {
-	db, err := ConnectDB()
+	db := ConnectDB()
 	assert.NotNil(t, db)
-	assert.NoError(t, err)
+	assert.NoError(t, db.Error)
 }
