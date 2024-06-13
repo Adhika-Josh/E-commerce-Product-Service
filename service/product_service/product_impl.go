@@ -121,3 +121,24 @@ func (p ProductServiceImpl) UpdateProduct(c *gin.Context, req model.UpdateProduc
 	res.ItemPID = existingProduct.ItemPID
 	return res, custErr
 }
+func (p ProductServiceImpl) GetProductByID(c *gin.Context, id string) (model.GetProductsByIDResponse, model.Errors) {
+
+	var product entity.ProductDetails
+	var res model.GetProductsByIDResponse
+	if err := p.DB.Where("item_pid = ?", id).First(&product).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return res, model.Errors{
+				Error: "No record found for the given Item_PID",
+				Type:  "record_not_found",
+			}
+		}
+	}
+	res = model.GetProductsByIDResponse{
+		ItemPID:      product.ItemPID,
+		ItemName:     product.ItemName,
+		ItemCategory: product.ItemCategory,
+		ItemQuantity: product.ItemQuantity,
+		ItemPrice:    product.ItemPrice,
+	}
+	return res, model.Errors{}
+}

@@ -56,3 +56,23 @@ func ValidateLoginAdmin(c *gin.Context) (req model.LoginAdminRequest, custErr mo
 	}
 	return req, custErr
 }
+func ValidateDeleteAdmin(c *gin.Context) (req model.DeleteAdminRequest, custErr model.Errors) {
+	custErr = validator.ValidateUnknownParams(&req, c)
+	if custErr.Error != "" {
+		return req, custErr
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		return req, validator.GetRequestUnableToBindZwError()
+	}
+	return req, custErr
+}
+func ValidateUpdateAdmin(c *gin.Context) (req model.UpdateAdminRequest, custErr model.Errors) {
+	custErr = validator.ValidateUnknownParams(&req, c)
+	if custErr.Error != "" {
+		return req, custErr
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		return req, validator.GetRequestUnableToBindZwError()
+	}
+	return req, custErr
+}

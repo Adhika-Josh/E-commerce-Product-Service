@@ -41,6 +41,29 @@ func LoginAdmin(c *gin.Context) {
 	}
 	validator.ReturnJsonStruct(c, apiRes)
 }
+func DeleteAdmin(c *gin.Context) {
+	req, err := admin_validator.ValidateDeleteAdmin(c)
+	if err.Error != "" {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, err)
+		return
+	}
+	apiRes, err := a.DeleteAdmin(c, req)
+	if err.Error != "" {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, err)
+		return
+	}
+	validator.ReturnJsonStruct(c, apiRes)
+}
 func UpdateAdmin(c *gin.Context) {
-
+	req, err := admin_validator.ValidateUpdateAdmin(c)
+	if err.Error != "" {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, err)
+		return
+	}
+	apiRes, err := a.UpdateAdmin(c, req)
+	if err.Error != "" {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, err)
+		return
+	}
+	validator.ReturnJsonStruct(c, apiRes)
 }

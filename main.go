@@ -18,12 +18,15 @@ func main() {
 	{
 		admin.POST("/add", admin_controller.AddAdmins)
 		admin.POST("/login", admin_controller.LoginAdmin)
+		admin.DELETE("/delete", admin_controller.DeleteAdmin)
+		admin.PATCH("/update", admin_controller.UpdateAdmin)
 	}
 	v1 := r.Group("/product-service/v1")
 	{
 		v1.POST("/add-product", product_controller.AddProducts)
 		v1.GET("/get-all-products", product_controller.GetAllProducts)
 		v1.PATCH("/update-product", product_controller.UpdateProduct)
+		v1.GET("/get/:id", product_controller.GetProductsById)
 	}
 	r.Run("localhost:8080")
 

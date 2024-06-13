@@ -39,6 +39,7 @@ func ReturnJsonStruct(c *gin.Context, genericStruct interface{}) {
 }
 func ValidateUnknownParams(reqBody interface{}, ctx *gin.Context) model.Errors {
 	ginErr := model.Errors{
+		Code:  "400",
 		Error: "the request body is invalid",
 		Type:  "invalid_request_error",
 	}
