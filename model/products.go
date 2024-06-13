@@ -32,3 +32,10 @@ type UpdateProductResponse struct {
 	Message string `json:"message"`
 	ItemPID string `json:"item_pid"`
 }
+type GetProductsByIDResponse struct {
+	ItemPID      string `json:"item_pid"`
+	ItemName     string `json:"item_name"`
+	ItemCategory string `json:"item_category"`
+	ItemQuantity string `json:"item_quantity"`
+	ItemPrice    string `json:"item_price"`
+}

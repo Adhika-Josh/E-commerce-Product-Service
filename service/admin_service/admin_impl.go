@@ -33,7 +33,7 @@ func (a AdminServiceImpl) CreateAdmin(c *gin.Context, req model.CreateAdminReque
 		}
 	}
 	newAdmin := entity.AdminDetails{
-		AdminPID:  "AD_" + utils.GenerateRandString(8),
+		AdminPID:  "AD_" + utils.GenerateRandString(6),
 		Name:      req.Name,
 		PhoneNo:   req.PhoneNo,
 		Dob:       req.Dob,
@@ -81,5 +81,65 @@ func (a AdminServiceImpl) LoginAdmin(c *gin.Context, req model.LoginAdminRequest
 	res.Message = "Login successful"
 	res.AdminPID = admin.AdminPID
 
+	return res, custErr
+}
+func (a AdminServiceImpl) DeleteAdmin(c *gin.Context, req model.DeleteAdminRequest) (model.DeleteAdminResponse, model.Errors) {
+	var user entity.AdminDetails
+	var res model.DeleteAdminResponse
+	var custErr model.Errors
+	if err := a.DB.Where("admin_pid= ?", req.AdminPID).First(&user).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return res, model.Errors{
+				Error: "no_user_found",
+				Type:  "invalid_credentials_error",
+			}
+		}
+		return res, model.Errors{
+			Error: err.Error(),
+			Type:  "internal_server_error",
+		}
+	}
+	if err := a.DB.Delete(&user).Error; err != nil {
+		return res, model.Errors{
+			Error: "Failed to delete user",
+			Type:  "internal_server_error",
+		}
+	}
+	res.Status = http.StatusOK
+	res.Message = "User deleted successfully"
+	res.AdminPID = user.AdminPID
+	return res, custErr
+}
+func (a AdminServiceImpl) UpdateAdmin(c *gin.Context, req model.UpdateAdminRequest) (model.UpdateAdminResponse, model.Errors) {
+	var admin entity.AdminDetails
+	var res model.UpdateAdminResponse
+	var custErr model.Errors
+
+	if err := a.DB.Where("admin_pid = ?", req.AdminPID).First(&admin).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return res, model.Errors{
+				Error: "No record found for the given Item_PID",
+				Type:  "record_not_found",
+			}
+		}
+	}
+
+	admin.AdminPID = req.AdminPID
+	admin.Name = req.Name
+	admin.Dob = req.Dob
+	admin.PhoneNo = req.PhoneNo
+	admin.Email = req.Email
+	admin.UserName = req.UserName
+	admin.Password = req.Password
+	admin.UpdatedAt = time.Now()
+	if err := a.DB.Save(&admin).Error; err != nil {
+		return res, model.Errors{
+			Error: "Failed to update product",
+			Type:  "internal_server_error",
+		}
+	}
+	res.Status = http.StatusOK
+	res.Message = "User Details updated successfully"
+	res.AdminPID = admin.AdminPID
 	return res, custErr
 }

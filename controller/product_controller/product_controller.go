@@ -51,3 +51,14 @@ func UpdateProduct(c *gin.Context) {
 	}
 	validator.ReturnJsonStruct(c, apiRes)
 }
+
+func GetProductsById(c *gin.Context) {
+	id := c.Param("id")
+	apiRes, err := p.GetProductByID(c, id)
+	if err.Error != "" {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, err)
+		return
+	}
+	validator.ReturnJsonStruct(c, apiRes)
+
+}
